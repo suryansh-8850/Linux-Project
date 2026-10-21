@@ -1,39 +1,79 @@
-==============================
-      SERVER HEALTH CHECK
-==============================
-Tue Oct 20 19:00:00 IST 2026
-Hostname: ubuntu-server
-Uptime: up 2 hours, 15 minutes
 
-========== CPU CHECK ==========
-CPU Usage: 12%
+#!/bin/bash
 
-========== RAM CHECK ==========
-RAM Usage: 850 MB / 2048 MB (41%)
+echo "=============================="
+echo "      SERVER HEALTH CHECK"
+echo "=============================="
+date
+echo "Hostname: $(hostname)"
+echo "Uptime: $(uptime -p)"
+echo
 
-========== DISK CHECK ==========
-Disk Usage: 8.5G / 20G (43%)
+echo "========== CPU CHECK =========="
 
-========== TOP 5 PROCESSES ==========
-PID    COMMAND     %CPU  %MEM
-1234   python3     5.2   2.1
-1023   apache2     2.4   1.3
-891    sshd        0.5   0.4
-567    systemd     0.2   0.3
-456    cron        0.1   0.2
+CPU_USED=$(top -bn1 | awk '/Cpu\(s\)/ {print 100 - $8}')
+echo "CPU Usage: ${CPU_USED}%"
 
-========== SSH SERVICE ==========
-SSH is running
+echo
+echo "========== RAM CHECK =========="
 
-========== APACHE SERVICE ==========
-Apache is running
+RAM_TOTAL=$(free -m | awk '/Mem:/ {print $2}')
+RAM_USED=$(free -m | awk '/Mem:/ {print $3}')
+RAM_PERCENT=$((RAM_USED * 100 / RAM_TOTAL))
 
-========== MYSQL SERVICE ==========
-MySQL is not running
+echo "RAM Usage: $RAM_USED MB / $RAM_TOTAL MB ($RAM_PERCENT%)"
 
-========== NETWORK CHECK ==========
-Network is connected
+echo
+echo "========== DISK CHECK =========="
 
-==============================
-    HEALTH CHECK COMPLETE
-==============================
+DISK_TOTAL=$(df -h / | awk 'NR==2 {print $2}')
+DISK_USED=$(df -h / | awk 'NR==2 {print $3}')
+DISK_PERCENT=$(df -h / | awk 'NR==2 {print $5}')
+
+echo "Disk Usage: $DISK_USED / $DISK_TOTAL ($DISK_PERCENT)"
+
+echo
+echo "========== TOP 5 PROCESSES =========="
+
+ps -eo pid,comm,pcpu,pmem --sort=-pcpu | head -n 6
+
+echo
+echo "========== SSH SERVICE =========="
+
+if systemctl is-active --quiet ssh; then
+    echo "SSH is running"
+else
+    echo "SSH is not running"
+fi
+
+echo
+echo "========== APACHE SERVICE =========="
+
+if systemctl is-active --quiet apache2; then
+    echo "Apache is running"
+else
+    echo "Apache is not running"
+fi
+
+echo
+echo "========== MYSQL SERVICE =========="
+
+if systemctl is-active --quiet mysql; then
+    echo "MySQL is running"
+else
+    echo "MySQL is not running"
+fi
+
+echo
+echo "========== NETWORK CHECK =========="
+
+if ping -c 1 -W 2 8.8.8.8 > /dev/null 2>&1; then
+    echo "Network is connected"
+else
+    echo "Network connection failed"
+fi
+
+echo
+echo "=============================="
+echo "    HEALTH CHECK COMPLETE"
+echo "=============================="
