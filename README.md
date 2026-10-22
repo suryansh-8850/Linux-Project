@@ -10,19 +10,52 @@ This repository consists of various Bash scripts for Linux automation. These scr
 
 **Use Case -** This script can be used by a system administrator to check whether the server is working properly or not. It helps to identify problems such as high CPU usage, high RAM usage, low disk space, stopped services, and network connectivity issues.
 
-### 2. `backup.sh` — Automated Backup
+### 2. `deploy.sh` — Application Deployment
+
+**Purpose -** This script is used to deploy a website on Ubuntu Server. It asks the user to enter the location of the website ZIP file. If a website is already deployed, the script automatically creates a ZIP backup of the previous website with the current date and time and stores it in a separate backup folder. After taking the backup, it removes the previous website files, extracts the new website, sets the required permissions, configures Nginx and PHP, and checks whether the website is working using `curl`.
+
+**Use Case -** This script can be used by a system administrator to deploy new websites or update an existing website without manually performing every step. It also helps to keep backups of previously deployed websites so that the old website files can be recovered if required.
+
+**Output -**
+
+```text
+========== CHECKING PREVIOUS WEBSITE ==========
+Previous website found
+Creating backup...
+PASS: Backup created successfully
+Backup location: /var/www/backup/website_2026-10-22_18-30-00.zip
+Removing previous website...
+
+========== EXTRACTING NEW WEBSITE ==========
+
+========== SETTING PERMISSIONS ==========
+
+========== CONFIGURING NGINX ==========
+
+========== STARTING SERVICES ==========
+
+========== WEBSITE CHECK ==========
+HTTP Status: 200
+PASS: Website is working successfully
+
+================================
+       DEPLOYMENT COMPLETED
+================================
+```
+
+### 3. `backup.sh` — Automated Backup
 
 **Purpose -** This script is used to take backups of important files and folders from the Ubuntu server. It asks the user to enter the path of the file or folder that needs to be backed up. It then creates a compressed backup file with the current date and time and stores it in a separate backup folder.
 
 **Use Case -** This script can be used when a system administrator wants to take a backup of important files, website files, application files, or configuration files. It helps to keep a copy of important data so that it can be recovered if the original data is accidentally deleted or lost.
 
-### 3. `log_monitor.sh` — Log Monitoring
+### 4. `log_monitor.sh` — Log Monitoring
 
 **Purpose -** This script checks the Ubuntu server logs to identify important errors and suspicious activities. It checks failed SSH login attempts, authentication failures, system errors, and Apache server errors. It also displays a warning message if multiple failed login attempts or system errors are detected.
 
 **Use Case -** This script can be used by a system administrator to monitor server logs and identify problems such as repeated failed login attempts, authentication failures, and service errors. It helps the administrator to find problems and take necessary action.
 
-### 4. `security_audit.sh` — Server Security Audit
+### 5. `security_audit.sh` — Server Security Audit
 
 **Purpose -** This script performs a basic security check of the Ubuntu server. It checks whether the firewall is active, which ports are open, which users exist on the system, who is currently logged in, and which services are running. It also checks SSH security settings, file permissions, SUID files, and failed SSH login attempts. The results are displayed with PASS, WARNING, or FAIL messages and saved in a report file.
 
@@ -30,18 +63,17 @@ This repository consists of various Bash scripts for Linux automation. These scr
 
 ## Repository Structure
 
-```text
-GitHub-Repository/
+```
+Linux-Projects/
 │
 ├── README.md
 │
 └── Linux-Automation-Scripts/
-    │
     ├── health.sh
     ├── backup.sh
     ├── log_monitor.sh
-    └── security_audit.sh
-```
+    ├── security_audit.sh
+    └── deploy.sh
 
 ## Requirements
 
@@ -64,6 +96,7 @@ Run the required script.
 
 ```bash
 ./health.sh
+sudo ./deploy.sh
 ./backup.sh
 sudo ./log_monitor.sh
 sudo ./security_audit.sh
