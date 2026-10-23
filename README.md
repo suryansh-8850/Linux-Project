@@ -221,6 +221,8 @@ Report saved: security_audit_report.txt
 ## Repository Structure
 ```
 
+## Structure 
+```
 Linux-Projects/
 │
 ├── README.md
@@ -231,7 +233,7 @@ Linux-Projects/
     ├── log_monitor.sh
     ├── security_audit.sh
     └── deploy.sh
-
+```
 ## Requirements
 
 - Ubuntu Server
