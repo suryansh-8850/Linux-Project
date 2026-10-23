@@ -2,7 +2,7 @@
 
 This repository consists of various Bash scripts for Linux automation. These scripts are created to perform common tasks on Ubuntu Server, such as checking server health, taking backups, monitoring logs, and checking server security. The main purpose of these scripts is to reduce manual work and make Linux server management easier.
 
-##  Linux Automation Scripts
+##  Bash Automation Scripts
 
 ### 1. `health.sh` — Server Health Check
 
